@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tribe Sauna + Ice Pricing</title>
+<style>
+
+  :root{
+    --text:#27434a; --muted:#6d8589; --line:#d9e9e1; --bg:#f5fbf8;
+    --brand:#95C4BF; --brand-soft:#eaf4f1; --brand-dark:#325963; --shadow:0 12px 28px rgba(50,89,99,.08);
+  }
+  html{scroll-behavior:smooth}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfefd 0%,var(--bg) 100%)}
+  .wrap{max-width:1460px;margin:0 auto;padding:28px 24px 84px}
+  .hero{background:linear-gradient(135deg,#f0f8f5 0%,#fbfefd 100%);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:36px;margin-bottom:20px}
+  .brand-pill{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(50,89,99,.08);color:var(--brand-dark);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+  h1{margin:0 0 10px;font-size:52px;line-height:1.02;letter-spacing:-.045em;max-width:760px}
+  .hero p{margin:0;max-width:760px;font-size:18px;line-height:1.58;color:var(--muted)}
+  .layout{display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start}
+  .sidebar{position:sticky;top:18px;background:#f8fcfa;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:18px}
+  .sidebar h3{margin:0 0 14px;font-size:18px;color:var(--brand-dark);letter-spacing:-.02em}
+  .filter-stack{display:grid;gap:10px}
+  .filter-btn{border:1px solid var(--line);background:#fff;color:var(--brand-dark);padding:14px 16px;border-radius:999px;font-weight:800;font-size:14px;cursor:pointer;text-align:center;box-shadow:var(--shadow)}
+  .filter-btn.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff}
+  .content{display:grid;gap:18px}
+  .section-block{background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:24px}
+  .section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:16px}
+  .section-head h2{margin:0;font-size:34px;letter-spacing:-.04em}
+  .section-head p{margin:0;color:var(--muted);line-height:1.5}
+  .comparison-group + .comparison-group{margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
+  .comparison-label{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .comparison-label h3{margin:0;font-size:22px;letter-spacing:-.03em}
+  .comparison-grid,.packs-grid,.simple-two-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .plan-card{display:grid;grid-template-columns:200px minmax(0,1fr);gap:28px;align-items:stretch;border:1px solid var(--line);border-radius:24px;padding:24px;background:#fbfdfc;min-height:330px}
+  .plan-side{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:18px;height:100%}
+  .plan-price{display:flex;align-items:flex-start;justify-content:flex-start;width:100%}
+  .price-block{display:flex;flex-direction:column;align-items:flex-start}
+  .price-line{display:flex;align-items:flex-start;gap:2px;line-height:1}
+  .currency{font-size:.42em;font-weight:800;opacity:.42;position:relative;top:.18em}
+  .amount{font-size:50px;font-weight:900;letter-spacing:-.055em;color:var(--brand-dark)}
+  .price-sub{margin-top:8px;font-size:14px;line-height:1.32;color:var(--muted);max-width:180px}
+  .actions{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:auto;width:200px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:15px 20px;border-radius:18px;font-weight:800;font-size:18px;line-height:1;background:var(--brand-dark);color:#fff;width:200px;text-align:center;box-shadow:var(--shadow)}
+  .sub-link{display:block;width:200px;text-align:center;margin:0;color:#6a6a6a;font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+  .plan-main{min-width:0;padding-top:2px;align-self:start;display:flex;flex-direction:column;justify-content:flex-start}
+  .plan-main h4{margin:0 0 12px;font-size:28px;letter-spacing:-.04em;line-height:1.08;color:var(--brand-dark)}
+  .desc{margin:0 0 14px;color:var(--muted);line-height:1.42;font-size:17px;max-width:520px}
+  .features{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .features li{position:relative;padding-left:26px;line-height:1.34;font-size:17px;color:var(--brand-dark)}
+  .features li:before{content:"✓";position:absolute;left:0;top:0;font-weight:900}
+  .casual-hero{background:linear-gradient(135deg,#eef7f4 0%, #fbfefd 100%);border:1px solid var(--line);border-radius:28px;padding:28px}
+  .casual-hero-inner{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;align-items:stretch}
+  .casual-hero .plan-side{justify-content:space-between;min-height:100%;padding-top:0}
+  .casual-hero .amount{font-size:74px;letter-spacing:-.06em}
+  .casual-hero .currency{font-size:.40em;opacity:.38;top:.16em}
+  .casual-hero .price-sub{font-size:15px;max-width:170px}
+  .casual-hero-copy h3{margin:0 0 12px;font-size:38px;line-height:1.04;letter-spacing:-.04em;color:var(--brand-dark)}
+  .casual-hero-copy p{margin:0 0 18px;color:var(--muted);line-height:1.45;font-size:18px;max-width:760px}
+  .hours-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+  .hours-card{border:1px solid var(--line);border-radius:22px;padding:18px;background:#fbfdfc}
+  .hours-card h4{margin:0 0 10px;font-size:24px;letter-spacing:-.03em}
+  .hours-line{padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:#fff;line-height:1.45}
+  .hours-line + .hours-line{margin-top:8px}
+  .hours-line strong{color:var(--brand-dark)}
+  
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:44px;
+    padding:0 16px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--brand-dark);
+    text-decoration:none;
+    font-weight:800;
+    font-size:14px;
+    box-shadow:var(--shadow);
+    margin-bottom:14px;
+  }
+
+  .hidden{display:none !important}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="index.html">← Back to models</a>
+  <section class="hero">
+    <div class="brand-pill">Tribe Sauna + Ice</div>
+    <h1>Choose the pass that fits your routine.</h1>
+    <p>An alternative pricing model with stronger value on packs while keeping the same offer structure.</p>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h3>Filters:</h3>
+      <div class="filter-stack">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="casual">Casual Pass</button>
+        <button class="filter-btn" data-filter="subscriptions">Subscriptions</button>
+        <button class="filter-btn" data-filter="packs">Packs</button>
+        <button class="filter-btn" data-filter="anytime">Anytime</button>
+        <button class="filter-btn" data-filter="offpeak">Off Peak</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      
+<section class="section-block" id="casual-section">
+  <div class="casual-hero" data-group="casual" data-access="casual">
+    <div class="casual-hero-inner">
+      <div class="plan-side">
+        <div class="plan-price">
+          <div class="price-block">
+            <div class="price-line"><span class="currency">$</span><span class="amount">29</span></div>
+            <div class="price-sub">single visit</div>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="#" class="btn">Book</a>
+          <a href="#hours" class="sub-link">view access hours</a>
+        </div>
+      </div>
+      <div class="casual-hero-copy">
+        <h3>Casual Pass</h3>
+        <p>A simple one-off visit for anyone wanting to experience Tribe before choosing a pack or subscription.</p>
+        <ul class="features"><li>1 visit to any available session</li><li>Perfect for first-time visitors</li><li>The easiest way to experience Tribe</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+<section class="section-block" id="subscriptions">
+  <div class="section-head">
+    <div>
+      <h2>Subscriptions</h2>
+      <p>Choose the subscription that best suits your routine.</p>
+    </div>
+  </div>
+  <div class="simple-two-grid">
+    
+    <div class="plan-card" data-group="subscriptions" data-access="anytime">
+      <div class="plan-side">
+        <div class="plan-price">
+          <div class="price-block">
+            <div class="price-line"><span class="currency">$</span><span class="amount">40</span></div>
+            <div class="price-sub">per week, billed monthly</div>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="#" class="btn">Sign Up</a>
+          <a href="#hours" class="sub-link">view access hours</a>
+        </div>
+      </div>
+      <div class="plan-main">
+        <h4>Anytime Unlimited</h4>
+        <p class="desc">Unlimited visits to any available session, 7 days a week.</p>
+        <ul class="features"><li>Visit daily at any available time</li><li>Maximum flexibility</li><li>Best for regular users wanting full access</li></ul>
+      </div>
+    </div>
+    
+    <div class="plan-card" data-group="subscriptions" data-access="offpeak">
+      <div class="plan-side">
+        <div class="plan-price">
+          <div class="price-block">
+            <div class="price-line"><span class="currency">$</span><span class="amount">30</span></div>
+            <div class="price-sub">per week, billed monthly</div>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="#" class="btn">Sign Up</a>
+          <a href="#hours" class="sub-link">view access hours</a>
+        </div>
+      </div>
+      <div class="plan-main">
+        <h4>Off Peak Unlimited</h4>
+        <p class="desc">Unlimited visits during Off Peak access hours.</p>
+        <ul class="features"><li>Visit daily during Off Peak hours</li><li>Great value for regular routine</li><li>Ideal for daytime and early weekend users</li></ul>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+      
+<section class="section-block" id="packs">
+  <div class="section-head">
+    <div>
+      <h2>Packs</h2>
+      <p>Prepaid options with more flexibility and no ongoing commitment.</p>
+    </div>
+  </div>
+  <div class="packs-grid">
+    
+    <div class="plan-card" data-group="packs" data-access="anytime">
+      <div class="plan-side">
+        <div class="plan-price">
+          <div class="price-block">
+            <div class="price-line"><span class="currency">$</span><span class="amount">230</span></div>
+            <div class="price-sub">one-off payment · $23/visit</div>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="#" class="btn">Purchase</a>
+          <a href="#hours" class="sub-link">view access hours</a>
+        </div>
+      </div>
+      <div class="plan-main">
+        <h4>Anytime 10 Pack</h4>
+        <p class="desc">A flexible prepaid option with full access.</p>
+        <ul class="features"><li>10 visits to any available session</li><li>Premium flexibility without a subscription</li><li>Expires 6 months from purchase</li></ul>
+      </div>
+    </div>
+    
+    <div class="plan-card" data-group="packs" data-access="offpeak">
+      <div class="plan-side">
+        <div class="plan-price">
+          <div class="price-block">
+            <div class="price-line"><span class="currency">$</span><span class="amount">200</span></div>
+            <div class="price-sub">one-off payment · $20/visit</div>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="#" class="btn">Purchase</a>
+          <a href="#hours" class="sub-link">view access hours</a>
+        </div>
+      </div>
+      <div class="plan-main">
+        <h4>Off Peak 10 Pack</h4>
+        <p class="desc">A flexible prepaid option for Off Peak access.</p>
+        <ul class="features"><li>10 Off Peak visits</li><li>Flexible use without a subscription</li><li>Expires 6 months from purchase</li></ul>
+      </div>
+    </div>
+    
+    <div class="plan-card" data-group="packs" data-access="anytime">
+      <div class="plan-side">
+        <div class="plan-price">
+          <div class="price-block">
+            <div class="price-line"><span class="currency">$</span><span class="amount">360</span></div>
+            <div class="price-sub">one-off payment · $18/visit</div>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="#" class="btn">Purchase</a>
+          <a href="#hours" class="sub-link">view access hours</a>
+        </div>
+      </div>
+      <div class="plan-main">
+        <h4>Anytime 20 Pack</h4>
+        <p class="desc">A higher-value prepaid option with full access.</p>
+        <ul class="features"><li>20 visits to any available session</li><li>Better value for heavier casual use</li><li>Expires 6 months from purchase</li></ul>
+      </div>
+    </div>
+    
+    <div class="plan-card" data-group="packs" data-access="offpeak">
+      <div class="plan-side">
+        <div class="plan-price">
+          <div class="price-block">
+            <div class="price-line"><span class="currency">$</span><span class="amount">300</span></div>
+            <div class="price-sub">one-off payment · $15/visit</div>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="#" class="btn">Purchase</a>
+          <a href="#hours" class="sub-link">view access hours</a>
+        </div>
+      </div>
+      <div class="plan-main">
+        <h4>Off Peak 20 Pack</h4>
+        <p class="desc">A higher-value prepaid option for Off Peak access.</p>
+        <ul class="features"><li>20 Off Peak visits</li><li>Better value for heavier casual use</li><li>Expires 6 months from purchase</li></ul>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+      
+<section class="section-block" id="hours">
+  <div class="section-head">
+    <div>
+      <h2>Access Hours</h2>
+      <p>Choose the access type that best suits your schedule.</p>
+    </div>
+  </div>
+  <div class="hours-grid">
+    <div class="hours-card">
+      <h4>Casual</h4>
+      <div class="hours-line"><strong>Available</strong> 7 days a week, 9am–5pm</div>
+    </div>
+    <div class="hours-card">
+      <h4>Off Peak Access</h4>
+      <div class="hours-line"><strong>Weekdays</strong> 9am–5pm</div>
+      <div class="hours-line"><strong>Weekends</strong> 5am–9am</div>
+    </div>
+    <div class="hours-card">
+      <h4>Anytime Access</h4>
+      <div class="hours-line"><strong>7 days a week</strong> 5am–9pm</div>
+    </div>
+  </div>
+</section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+
+const buttons=document.querySelectorAll('.filter-btn');
+const hourLinks=document.querySelectorAll('.sub-link[href="#hours"]');
+const sections={
+  casual: document.getElementById('casual-section'),
+  subscriptions: document.getElementById('subscriptions'),
+  packs: document.getElementById('packs')
+};
+const cards=document.querySelectorAll('[data-group]');
+const scrollTargets={all:'casual-section', casual:'casual-section', subscriptions:'subscriptions', packs:'packs', anytime:'subscriptions', offpeak:'subscriptions'};
+
+function setActive(filter){
+  buttons.forEach(btn=>btn.classList.toggle('active',btn.dataset.filter===filter));
+}
+function showAll(){
+  Object.values(sections).forEach(s=>s.classList.remove('hidden'));
+  cards.forEach(c=>c.classList.remove('hidden'));
+}
+function smoothScrollTo(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function applyFilter(filter, shouldScroll=true){
+  setActive(filter);
+  if(filter==='all'){
+    showAll();
+  } else if(filter==='casual'){
+    sections.casual.classList.remove('hidden');
+    sections.subscriptions.classList.add('hidden');
+    sections.packs.classList.add('hidden');
+  } else if(filter==='subscriptions'){
+    sections.casual.classList.add('hidden');
+    sections.subscriptions.classList.remove('hidden');
+    sections.packs.classList.add('hidden');
+    cards.forEach(c=>c.classList.remove('hidden'));
+  } else if(filter==='packs'){
+    sections.casual.classList.add('hidden');
+    sections.subscriptions.classList.add('hidden');
+    sections.packs.classList.remove('hidden');
+    cards.forEach(c=>c.classList.remove('hidden'));
+  } else {
+    sections.casual.classList.add('hidden');
+    sections.subscriptions.classList.remove('hidden');
+    sections.packs.classList.remove('hidden');
+    cards.forEach(c=>c.classList.toggle('hidden', c.dataset.access!==filter));
+  }
+  if(shouldScroll) smoothScrollTo(scrollTargets[filter] || 'casual-section');
+}
+buttons.forEach(btn=>btn.addEventListener('click',()=>applyFilter(btn.dataset.filter,true)));
+hourLinks.forEach(link=>link.addEventListener('click',function(e){
+  e.preventDefault();
+  smoothScrollTo('hours');
+}));
+applyFilter('all', false);
+</script>
+
+</body>
+</html>
