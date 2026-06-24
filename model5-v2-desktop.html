@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tribe Sauna + Ice — Passes & Memberships</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Schibsted+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* "Ice at dusk" — Tribe palette pushed to night */
+    --ink:#0B1D21;          /* deep teal, near-black base */
+    --ink-2:#0E2429;        /* base gradient end */
+    --brand:#325963;        /* Deep Teal */
+    --sage:#95C4BF;         /* Sage Teal */
+    --mint:#D9E9E1;         /* Soft Mint */
+    --cream:#F5F3EF;        /* Cream */
+
+    --text:#F5F3EF;                       /* headings */
+    --body:#C6D7D2;                       /* paragraph body */
+    --muted:#8FAAA7;                       /* captions / sub */
+    --line:rgba(217,233,225,.13);
+    --line-strong:rgba(217,233,225,.24);
+
+    --card:rgba(149,196,191,.055);
+    --card-hi:rgba(149,196,191,.10);
+
+    --glow:rgba(149,196,191,.30);
+
+    --r-card:22px;
+    --r-hero:28px;
+    --r-btn:13px;
+
+    --maxw:1180px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--body);
+    background:
+      radial-gradient(1100px 620px at 50% -8%, rgba(149,196,191,.10), transparent 60%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
+    background-attachment:fixed;
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* faint frost grain for depth */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:22px 22px 96px;position:relative;z-index:1}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:34px}
+  .wordmark{
+    font-family:"Schibsted Grotesk",sans-serif;font-weight:800;letter-spacing:.16em;
+    text-transform:uppercase;font-size:13px;color:var(--cream);
+  }
+  .wordmark span{color:var(--sage)}
+  .back{
+    color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;
+    display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;
+    border:1px solid var(--line);transition:border-color .2s,color .2s,background .2s;
+  }
+  .back:hover{color:var(--cream);border-color:var(--line-strong);background:var(--card)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:18px 4px 46px;max-width:880px}
+  .eyebrow{
+    font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--sage);display:inline-flex;align-items:center;gap:12px;margin-bottom:22px;
+  }
+  .eyebrow::before{content:"";width:34px;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,var(--cream),var(--sage) 55%,var(--brand));}
+  .hero h1{
+    font-family:"Schibsted Grotesk",sans-serif;font-weight:800;
+    font-size:clamp(2.7rem,7vw,5rem);line-height:.96;letter-spacing:-.035em;
+    color:var(--text);margin:0 0 20px;
+  }
+  .hero h1 em{font-style:normal;color:var(--sage)}
+  .hero p{font-size:clamp(1.02rem,1.5vw,1.2rem);max-width:620px;margin:0;color:var(--body)}
+  .hero p b{color:var(--cream);font-weight:600}
+
+  /* ---------- sticky jump nav ---------- */
+  .jump{
+    position:sticky;top:0;z-index:30;margin:0 -22px 40px;padding:12px 22px;
+    background:rgba(11,29,33,.72);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .jump-inner{max-width:var(--maxw);margin:0 auto;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+  .jump-inner::-webkit-scrollbar{display:none}
+  .jump a{
+    flex:0 0 auto;color:var(--body);text-decoration:none;font-size:13.5px;font-weight:600;
+    padding:9px 15px;border-radius:999px;border:1px solid var(--line);white-space:nowrap;
+    transition:color .2s,border-color .2s,background .2s;
+  }
+  .jump a:hover{color:var(--cream);border-color:var(--line-strong);background:var(--card)}
+
+  /* ---------- section scaffolding ---------- */
+  .tier{margin-bottom:58px;scroll-margin-top:84px}
+  .tier-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+  .tier-no{
+    font-family:"Schibsted Grotesk",sans-serif;font-weight:700;font-size:14px;
+    color:var(--sage);letter-spacing:.06em;
+  }
+  .tier-title{
+    font-family:"Schibsted Grotesk",sans-serif;font-weight:700;
+    font-size:clamp(1.6rem,3vw,2.15rem);letter-spacing:-.03em;color:var(--text);margin:0;
+  }
+  .tier-note{color:var(--muted);font-size:15px;margin:0;max-width:520px;flex:1 1 260px}
+
+  /* ---------- card base ---------- */
+  .card{
+    position:relative;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r-card);padding:26px;
+    display:flex;flex-direction:column;min-width:0;
+    transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .25s,background .25s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:var(--line-strong);background:var(--card-hi)}
+
+  .chip{
+    align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--sage);background:rgba(149,196,191,.10);border:1px solid var(--line);
+    padding:5px 10px;border-radius:999px;margin-bottom:18px;
+  }
+  .access{
+    font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--muted);display:inline-flex;align-items:center;gap:7px;margin-bottom:8px;
+  }
+  .access::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--sage)}
+
+  .card h3{
+    font-family:"Schibsted Grotesk",sans-serif;font-weight:700;
+    font-size:1.45rem;letter-spacing:-.02em;color:var(--cream);margin:0 0 12px;
+  }
+  .card .desc{font-size:.97rem;color:var(--body);margin:0 0 22px}
+
+  /* price */
+  .price{display:flex;align-items:flex-start;gap:3px;line-height:1;margin-bottom:4px}
+  .price .cur{font-family:"Schibsted Grotesk",sans-serif;font-weight:700;font-size:1.15rem;color:var(--sage);margin-top:.45em}
+  .price .num{font-family:"Schibsted Grotesk",sans-serif;font-weight:800;font-size:3rem;letter-spacing:-.04em;color:var(--cream)}
+  .price .per{align-self:flex-end;font-size:.95rem;font-weight:600;color:var(--muted);margin-bottom:.5em;margin-left:2px}
+  .price-sub{font-size:.86rem;color:var(--muted);margin:0 0 22px;font-weight:500}
+
+  /* features — mint check inside a frosted ring */
+  .feats{list-style:none;margin:0 0 26px;padding:0;display:grid;gap:11px}
+  .feats li{position:relative;padding-left:30px;font-size:.94rem;color:var(--body);line-height:1.45}
+  .feats li::before{
+    content:"";position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;
+    background:rgba(149,196,191,.14);border:1px solid rgba(149,196,191,.5);
+  }
+  .feats li::after{
+    content:"";position:absolute;left:6px;top:6px;width:6px;height:3px;
+    border-left:1.7px solid var(--mint);border-bottom:1.7px solid var(--mint);
+    transform:rotate(-45deg);
+  }
+
+  /* CTAs */
+  .cta-row{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;text-align:center;
+    text-decoration:none;font-weight:700;font-size:1rem;padding:15px 20px;border-radius:var(--r-btn);
+    border:1px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .25s,background .2s,border-color .2s;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn--primary{background:var(--mint);color:var(--ink);}
+  .btn--primary:hover{background:#E8F2ED;box-shadow:0 10px 34px rgba(149,196,191,.26)}
+  .btn--ghost{background:transparent;color:var(--cream);border-color:var(--line-strong)}
+  .btn--ghost:hover{background:var(--card-hi);border-color:var(--sage)}
+  .hours-link{
+    color:var(--sage);font-size:.86rem;font-weight:600;text-decoration:none;text-align:center;
+    border-bottom:1px solid transparent;align-self:center;padding-bottom:1px;transition:border-color .2s,color .2s;
+  }
+  .hours-link:hover{color:var(--mint);border-color:var(--sage)}
+
+  /* ---------- DROP IN (hero card) ---------- */
+  .dropin{
+    display:grid;grid-template-columns:1.15fr 1fr;gap:34px;align-items:center;
+    padding:36px;border-radius:var(--r-hero);
+    background:
+      radial-gradient(520px 360px at 88% 50%, rgba(149,196,191,.10), transparent 70%),
+      var(--card);
+  }
+  .dropin .copy{min-width:0}
+  .dropin h3{font-size:2rem}
+  .dropin .desc{font-size:1.05rem;max-width:420px}
+  .dropin .price .num{font-size:4.6rem}
+  .dropin .price .cur{font-size:1.6rem;margin-top:.4em}
+  .dropin .side{display:flex;flex-direction:column;gap:6px}
+
+  /* ---------- grids ---------- */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+
+  /* ---------- memberships ---------- */
+  .members-head{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+  .toggle{
+    display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px;gap:4px;
+  }
+  .toggle button{
+    font-family:inherit;font-weight:700;font-size:.92rem;color:var(--body);
+    background:transparent;border:0;cursor:pointer;padding:11px 22px;border-radius:999px;
+    transition:color .2s,background .2s;letter-spacing:.01em;
+  }
+  .toggle button.is-on{background:var(--mint);color:var(--ink)}
+  .toggle button:not(.is-on):hover{color:var(--cream)}
+
+  .members-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;align-items:stretch}
+  .is-hidden{display:none !important}
+
+  /* featured membership */
+  .card--featured{
+    border-color:rgba(149,196,191,.45);
+    background:
+      radial-gradient(420px 300px at 80% -10%, rgba(149,196,191,.16), transparent 70%),
+      var(--card-hi);
+    box-shadow:0 0 0 1px rgba(149,196,191,.10), 0 24px 60px -28px rgba(149,196,191,.40);
+  }
+  .card--featured .chip{color:var(--ink);background:var(--mint);border-color:transparent}
+
+  /* ---------- access hours ---------- */
+  .hours{scroll-margin-top:84px;margin-top:8px;border-top:1px solid var(--line);padding-top:48px}
+  .hours-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+  .hours-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:24px}
+  .hours-card h4{
+    font-family:"Schibsted Grotesk",sans-serif;font-weight:700;font-size:1.2rem;color:var(--cream);
+    margin:0 0 16px;letter-spacing:-.01em;
+  }
+  .slot{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid var(--line);font-size:.95rem}
+  .slot:first-of-type{border-top:0;padding-top:0}
+  .slot .when{color:var(--muted)}
+  .slot .time{color:var(--cream);font-weight:600;white-space:nowrap}
+
+  /* ---------- footer ---------- */
+  footer{margin-top:50px;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--line);padding-top:26px}
+  footer strong{color:var(--body);font-weight:600}
+
+  /* ---------- load motion ---------- */
+  .reveal{opacity:0;transform:translateY(16px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .d1{animation-delay:.05s}.d2{animation-delay:.13s}.d3{animation-delay:.21s}
+  .d4{animation-delay:.29s}.d5{animation-delay:.37s}.d6{animation-delay:.45s}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{animation:none;opacity:1;transform:none}
+    .card,.btn,.back{transition:none}
+  }
+
+  :focus-visible{outline:2px solid var(--sage);outline-offset:3px;border-radius:6px}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:880px){
+    .dropin{grid-template-columns:1fr;gap:26px;padding:28px}
+    .dropin .price .num{font-size:3.6rem}
+    .grid-3{grid-template-columns:1fr}
+    .members-grid{grid-template-columns:1fr}
+    .hours-grid{grid-template-columns:1fr}
+    .members-head{flex-direction:column;align-items:flex-start}
+    .toggle{width:100%}
+    .toggle button{flex:1}
+  }
+  @media (max-width:560px){
+    .wrap{padding:18px 16px 80px}
+    .jump{margin:0 -16px 32px;padding:11px 16px}
+    .tier{margin-bottom:48px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar reveal d1">
+    <div class="wordmark">Tribe <span>Sauna + Ice</span></div>
+    <a class="back" href="index.html">← Back to models</a>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow reveal d1">Passes &amp; Memberships</div>
+    <h1 class="reveal d2">Find your <em>rhythm.</em></h1>
+    <p class="reveal d3">Drop in for a single session, buy a block of visits, or join as a member. Choose <b>Off Peak</b> for the best daytime value or <b>Anytime</b> for full access — your call.</p>
+  </header>
+
+  <nav class="jump reveal d3" aria-label="Jump to section">
+    <div class="jump-inner">
+      <a href="#dropin">Drop in</a>
+      <a href="#packs">Packs</a>
+      <a href="#memberships">Memberships</a>
+      <a href="#hours">Access hours</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- 01 · DROP IN -->
+    <section class="tier" id="dropin">
+      <div class="tier-head reveal">
+        <span class="tier-no">01</span>
+        <h2 class="tier-title">Drop in</h2>
+        <p class="tier-note">No sign-up, no commitment. The easiest way to try Tribe for the first time.</p>
+      </div>
+
+      <div class="card dropin reveal">
+        <div class="copy">
+          <span class="chip">Start here</span>
+          <div class="access">Daytime access</div>
+          <h3>Casual Pass</h3>
+          <p class="desc">One session, walk-in. Heat up, cool down, and see why people keep coming back.</p>
+          <ul class="feats">
+            <li>One visit to any open session</li>
+            <li>Daytime access, seven days a week</li>
+            <li>Nothing to set up — just book and go</li>
+          </ul>
+        </div>
+        <div class="side">
+          <div class="price"><span class="cur">$</span><span class="num">25</span></div>
+          <p class="price-sub">per single visit</p>
+          <div class="cta-row">
+            <a href="#" class="btn btn--primary">Book a session</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · PACKS -->
+    <section class="tier" id="packs">
+      <div class="tier-head reveal">
+        <span class="tier-no">02</span>
+        <h2 class="tier-title">Packs</h2>
+        <p class="tier-note">Buy a block of visits and use them at your own pace. No subscription, no weekly billing.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card reveal d1">
+          <div class="access">Daytime access</div>
+          <h3>5 Visit Pass</h3>
+          <p class="desc">Five sessions to settle into a routine. Come whenever it suits you.</p>
+          <div class="price"><span class="cur">$</span><span class="num">110</span></div>
+          <p class="price-sub">5 visits · $22 per visit</p>
+          <ul class="feats">
+            <li>Five visits, daytime access</li>
+            <li>Less per visit than dropping in</li>
+            <li>Use them at your own pace</li>
+          </ul>
+          <div class="cta-row">
+            <a href="#" class="btn btn--ghost">Get 5 visits</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+
+        <div class="card reveal d2">
+          <span class="chip">Lowest per visit</span>
+          <div class="access">Off Peak access</div>
+          <h3>Off Peak 10</h3>
+          <p class="desc">Ten daytime sessions at our best per-visit rate.</p>
+          <div class="price"><span class="cur">$</span><span class="num">190</span></div>
+          <p class="price-sub">10 visits · $19 per visit</p>
+          <ul class="feats">
+            <li>Ten visits during Off Peak hours</li>
+            <li>Our lowest cost per visit</li>
+            <li>No subscription, no weekly billing</li>
+          </ul>
+          <div class="cta-row">
+            <a href="#" class="btn btn--ghost">Get 10 visits</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+
+        <div class="card reveal d3">
+          <div class="access">Anytime access</div>
+          <h3>Anytime 10</h3>
+          <p class="desc">Ten sessions you can use at any open time, early to late.</p>
+          <div class="price"><span class="cur">$</span><span class="num">230</span></div>
+          <p class="price-sub">10 visits · $23 per visit</p>
+          <ul class="feats">
+            <li>Ten visits to any open session</li>
+            <li>Full access, prepaid</li>
+            <li>No subscription, no weekly billing</li>
+          </ul>
+          <div class="cta-row">
+            <a href="#" class="btn btn--ghost">Get 10 visits</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · MEMBERSHIPS -->
+    <section class="tier" id="memberships">
+      <div class="members-head reveal">
+        <div class="tier-head" style="margin:0">
+          <span class="tier-no">03</span>
+          <h2 class="tier-title">Memberships</h2>
+          <p class="tier-note">Make it a habit. Pick your access lane, then choose how often you come.</p>
+        </div>
+        <div class="toggle" role="tablist" aria-label="Access lane">
+          <button data-lane-btn="offpeak" class="is-on" role="tab" aria-selected="true">Off Peak</button>
+          <button data-lane-btn="anytime" role="tab" aria-selected="false">Anytime</button>
+        </div>
+      </div>
+
+      <div class="members-grid">
+        <!-- OFF PEAK -->
+        <div class="card reveal d1" data-lane="offpeak">
+          <span class="chip">Lightest commitment</span>
+          <div class="access">Off Peak access</div>
+          <h3>Off Peak Weekly</h3>
+          <p class="desc">One visit a week, banked. A quieter week is never wasted.</p>
+          <div class="price"><span class="cur">$</span><span class="num">15</span><span class="per">/week</span></div>
+          <p class="price-sub">one Off Peak visit added each week</p>
+          <ul class="feats">
+            <li>One visit credit added every week</li>
+            <li>Unused credits roll over and stack</li>
+            <li>Builds to around 4–5 visits a month</li>
+          </ul>
+          <div class="cta-row">
+            <a href="#" class="btn btn--ghost">Start weekly</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+
+        <div class="card card--featured reveal d2" data-lane="offpeak">
+          <span class="chip">Most popular</span>
+          <div class="access">Off Peak access</div>
+          <h3>Off Peak Unlimited</h3>
+          <p class="desc">Come every day during Off Peak hours — cheaper than two casual visits a week.</p>
+          <div class="price"><span class="cur">$</span><span class="num">29</span><span class="per">/week</span></div>
+          <p class="price-sub">unlimited Off Peak visits</p>
+          <ul class="feats">
+            <li>Unlimited visits, seven days a week</li>
+            <li>Best value for daytime regulars</li>
+            <li>Pays off from your second visit each week</li>
+          </ul>
+          <div class="cta-row">
+            <a href="#" class="btn btn--primary">Go unlimited</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+
+        <!-- ANYTIME -->
+        <div class="card reveal d1 is-hidden" data-lane="anytime">
+          <span class="chip">Lightest commitment</span>
+          <div class="access">Anytime access</div>
+          <h3>Anytime Weekly</h3>
+          <p class="desc">One visit a week to any session, banked. Miss a week and the credit waits for you.</p>
+          <div class="price"><span class="cur">$</span><span class="num">20</span><span class="per">/week</span></div>
+          <p class="price-sub">one visit added each week</p>
+          <ul class="feats">
+            <li>One visit credit added every week</li>
+            <li>Unused credits roll over and stack</li>
+            <li>Builds to around 4–5 visits a month</li>
+          </ul>
+          <div class="cta-row">
+            <a href="#" class="btn btn--ghost">Start weekly</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+
+        <div class="card card--featured reveal d2 is-hidden" data-lane="anytime">
+          <span class="chip">Full access</span>
+          <div class="access">Anytime access</div>
+          <h3>Anytime Unlimited</h3>
+          <p class="desc">Every session, every day, early to late — cheaper than two casual visits a week.</p>
+          <div class="price"><span class="cur">$</span><span class="num">39</span><span class="per">/week</span></div>
+          <p class="price-sub">unlimited visits, any session</p>
+          <ul class="feats">
+            <li>Unlimited visits to any open session</li>
+            <li>Earliest mornings to latest evenings</li>
+            <li>Best for committed, regular visitors</li>
+          </ul>
+          <div class="cta-row">
+            <a href="#" class="btn btn--primary">Go unlimited</a>
+            <a href="#hours" class="hours-link">See access hours</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCESS HOURS -->
+    <section class="hours" id="hours">
+      <div class="tier-head reveal">
+        <span class="tier-no">⏱</span>
+        <h2 class="tier-title">Access hours</h2>
+        <p class="tier-note">When each access type can visit. Every pass and membership is tied to one of these.</p>
+      </div>
+      <div class="hours-grid">
+        <div class="hours-card reveal d1">
+          <h4>Daytime <span style="color:var(--muted);font-weight:500;font-size:.8rem">· Casual</span></h4>
+          <div class="slot"><span class="when">Every day</span><span class="time">9am – 5pm</span></div>
+        </div>
+        <div class="hours-card reveal d2">
+          <h4>Off Peak</h4>
+          <div class="slot"><span class="when">Weekdays</span><span class="time">9am – 5pm</span></div>
+          <div class="slot"><span class="when">Weekends</span><span class="time">5am – 9am</span></div>
+        </div>
+        <div class="hours-card reveal d3">
+          <h4>Anytime</h4>
+          <div class="slot"><span class="when">Every day</span><span class="time">5am – 9pm</span></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="reveal">
+      <strong>All prices in AUD.</strong> Memberships are billed weekly. Casual visits and packs are valid during the access hours shown above. Off Peak and Anytime memberships give access to their respective windows.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  /* Access-lane toggle for memberships */
+  const laneBtns = document.querySelectorAll('[data-lane-btn]');
+  const laneCards = document.querySelectorAll('[data-lane]');
+  function setLane(lane){
+    laneBtns.forEach(b=>{
+      const on = b.dataset.laneBtn === lane;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    laneCards.forEach(c=> c.classList.toggle('is-hidden', c.dataset.lane !== lane));
+  }
+  laneBtns.forEach(b=> b.addEventListener('click', ()=> setLane(b.dataset.laneBtn)));
+  setLane('offpeak');
+</script>
+</body>
+</html>
